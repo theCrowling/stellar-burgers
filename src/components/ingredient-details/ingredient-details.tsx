@@ -1,14 +1,29 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { setCurrentIngredient } from '../../services/slices/ingredientsSlice';
 
 export const IngredientDetails: FC = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { items, currentIngredient } = useSelector(
+    (state) => state.ingredients
+  );
   /** TODO: взять переменную из стора */
-  const ingredientData = null;
+  useEffect(() => {
+    if (items.length && id) {
+      const ingredient = items.find((item) => item._id === id);
+      if (ingredient) {
+        dispatch(setCurrentIngredient(ingredient));
+      }
+    }
+  }, [items, id, dispatch]);
 
-  if (!ingredientData) {
+  if (!currentIngredient) {
     return <Preloader />;
   }
 
-  return <IngredientDetailsUI ingredientData={ingredientData} />;
+  return <IngredientDetailsUI ingredientData={currentIngredient} />;
 };

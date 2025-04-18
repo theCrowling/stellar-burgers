@@ -4,10 +4,16 @@ import {
   useSelector as selectorHook,
   TypedUseSelectorHook
 } from 'react-redux';
-import userReducer from './userSlice';
+import userReducer from './slices/userSlice';
+import ingredientsReducer from './slices/ingredientsSlice';
+import burgerConstructorReducer from './slices/burgerConstructorSlice';
+import orderReducer from './slices/orderSlice';
 
 const rootReducer = {
-  user: userReducer
+  user: userReducer,
+  ingredients: ingredientsReducer,
+  burgerConstructor: burgerConstructorReducer,
+  order: orderReducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({

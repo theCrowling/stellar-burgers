@@ -87,6 +87,7 @@ export const getFeedsApi = () =>
       return Promise.reject(data);
     });
 
+// Получение заказов пользователя
 export const getOrdersApi = () =>
   fetchWithRefresh<TFeedsResponse>(`${URL}/orders`, {
     method: 'GET',
@@ -104,6 +105,7 @@ type TNewOrderResponse = TServerResponse<{
   name: string;
 }>;
 
+// Создание заказа
 export const orderBurgerApi = (data: string[]) =>
   fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
     method: 'POST',
