@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from '../../services/store';
 import { getFeeds } from '../../services/slices/feedSlice';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector((state) => state.feed.orders);
 
@@ -14,20 +13,9 @@ export const Feed: FC = () => {
     dispatch(getFeeds());
   }, [dispatch]);
 
-  const refreshHandler = () => {
-    dispatch(getFeeds());
-  };
+  const refreshHandler = () => dispatch(getFeeds());
 
-  if (!orders.length) {
-    return <Preloader />;
-  }
+  if (!orders.length) return <Preloader />;
 
-  return (
-    <FeedUI
-      orders={orders}
-      handleGetFeeds={() => {
-        refreshHandler();
-      }}
-    />
-  );
+  return <FeedUI orders={orders} handleGetFeeds={refreshHandler} />;
 };

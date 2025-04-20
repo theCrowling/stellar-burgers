@@ -11,8 +11,8 @@ import {
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
-    const location = useLocation();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const handleAdd = () => {
       if (ingredient.type === 'bun') {

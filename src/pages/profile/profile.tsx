@@ -2,6 +2,7 @@ import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 import { updateUserThunk } from '../../services/slices/userSlice';
+import { Preloader } from '@ui';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,8 @@ export const Profile: FC = () => {
     }));
   }, [user]);
 
+  if (!user) return <Preloader />;
+
   const isFormChanged =
     formValue.name !== user?.name ||
     formValue.email !== user?.email ||
@@ -28,12 +31,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const payload = {
-      name: formValue.name,
-      email: formValue.email,
-      password: formValue.password
-    };
-    dispatch(updateUserThunk(payload));
+    dispatch(updateUserThunk(formValue));
     setFormValue({
       name: user?.name || '',
       email: user?.email || '',
@@ -66,6 +64,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

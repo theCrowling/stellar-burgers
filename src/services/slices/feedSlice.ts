@@ -24,7 +24,6 @@ export const getFeeds = createAsyncThunk(
   'feed/fetchFeeds',
   async (_, thunkAPI) => {
     try {
-      console.log('[API] fetchFeeds сработал');
       return await getFeedsApi();
     } catch (error) {
       return thunkAPI.rejectWithValue('Ошибка при загрузке ленты');
@@ -36,7 +35,6 @@ export const getFeedsByNumber = createAsyncThunk(
   'feed/fetchFeedsByNumber',
   async (number: number, thunkAPI) => {
     try {
-      console.log('[API] fetchFeedsByNumber сработал');
       return await getOrderByNumberApi(number);
     } catch (error) {
       return thunkAPI.rejectWithValue('Ошибка при загрузке заказа');

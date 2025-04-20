@@ -18,7 +18,6 @@ export const getOrdersHistory = createAsyncThunk(
   'orders/getOrders',
   async (_, thunkAPI) => {
     try {
-      console.log('[API] getOrdersHistory сработал');
       const res = await getOrdersApi();
       return res;
     } catch (err) {

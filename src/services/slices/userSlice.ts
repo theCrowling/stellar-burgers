@@ -6,19 +6,21 @@ import {
   TRegisterData,
   updateUserApi
 } from '@api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { setCookie } from '../../utils/cookie';
 
 interface UserState {
   user: TUser | null;
   isLoading: boolean;
+  isAuth: boolean;
   error: string | unknown;
 }
 
 const initialState: UserState = {
   user: null,
   isLoading: false,
+  isAuth: false,
   error: null
 };
 
@@ -108,7 +110,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser(state, action) {
+    setUser(state, action: PayloadAction<TUser>) {
       state.user = action.payload;
     },
     logout(state) {
@@ -134,16 +136,23 @@ export const userSlice = createSlice({
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isAuth = true;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.user = null;
+        state.isAuth = false;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
       })
       .addCase(updateUserThunk.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isAuth = true;
         state.isLoading = false;
       })
       .addCase(updateUserThunk.rejected, (state, action) => {
         state.isLoading = false;
+        state.isAuth = false;
         state.error = action.payload ?? 'Ошибка';
       });
   }

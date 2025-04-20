@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from '../../services/store';
 import { setCurrentIngredient } from '../../services/slices/ingredientsSlice';
 
 export const IngredientDetails: FC = () => {
-  const { id } = useParams();
   const dispatch = useDispatch();
+  const { id } = useParams();
   const { items, currentIngredient } = useSelector(
     (state) => state.ingredients
   );
@@ -21,9 +21,7 @@ export const IngredientDetails: FC = () => {
     }
   }, [items, id, dispatch]);
 
-  if (!currentIngredient) {
-    return <Preloader />;
-  }
+  if (!currentIngredient) return <Preloader />;
 
   return <IngredientDetailsUI ingredientData={currentIngredient} />;
 };

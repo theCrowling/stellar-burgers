@@ -9,7 +9,6 @@ import { Preloader } from '@ui';
 export const BurgerIngredients: FC = () => {
   const { items, isLoading, error } = useSelector((state) => state.ingredients);
 
-  /** TODO: взять переменные из стора */
   const buns = items.filter((item) => item.type === 'bun');
   const mains = items.filter((item) => item.type === 'main');
   const sauces = items.filter((item) => item.type === 'sauce');
@@ -51,13 +50,8 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (isLoading) {
-    return <Preloader />;
-  }
-
-  if (error) {
-    return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
-  }
+  if (isLoading) return <Preloader />;
+  if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
 
   return (
     <BurgerIngredientsUI

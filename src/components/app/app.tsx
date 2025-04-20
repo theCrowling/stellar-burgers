@@ -46,7 +46,6 @@ const RouteComponent: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const background = location.state?.background;
-  // Переменные ниже для отображения номера заказа в заголовке модалки (пока не используются)
   const profileMatch = useMatch('/profile/orders/:number')?.params.number;
   const orderMatch = useMatch('/feed/:number')?.params.number;
   const orderNumber = profileMatch || orderMatch;

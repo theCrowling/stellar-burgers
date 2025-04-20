@@ -9,30 +9,24 @@ import { clearConstructor } from '../../services/slices/burgerConstructorSlice';
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
+
   const { bun, ingredients } = useSelector((state) => state.burgerConstructor);
   const { order, isLoading } = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
+
   const constructorItems = { bun, ingredients };
-
   const orderRequest = isLoading;
-
   const orderModalData = order;
 
   const onOrderClick = () => {
     if (!user.user) {
-      console.log('Пользователь не авторизован');
       navigate('/login');
       return;
     }
 
-    if (!bun || orderRequest) {
-      console.log('Заказ не может быть оформлен');
-      return;
-    }
+    if (!bun || orderRequest) return;
 
     const ingredientIds = [bun._id, ...ingredients.map((i) => i._id), bun._id];
-    console.log('Заказ оформляется...');
     dispatch(createOrder(ingredientIds));
   };
 

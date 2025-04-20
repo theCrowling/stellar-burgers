@@ -9,9 +9,7 @@ import { getFeedsByNumber } from '../../services/slices/feedSlice';
 export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   const { number } = useParams<{ number: string }>();
-
   const orderData = useSelector((state) => state.feed.currentOrder);
-
   const ingredients: TIngredient[] = useSelector(
     (state) => state.ingredients.items
   );
@@ -64,9 +62,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
-    return <Preloader />;
-  }
+  if (!orderInfo) return <Preloader />;
 
   return <OrderInfoUI orderInfo={orderInfo} />;
 };
