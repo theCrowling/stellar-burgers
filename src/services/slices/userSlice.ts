@@ -1,4 +1,11 @@
-import { getUserApi, loginUserApi, logoutApi, registerUserApi } from '@api';
+import {
+  getUserApi,
+  loginUserApi,
+  logoutApi,
+  registerUserApi,
+  TRegisterData,
+  updateUserApi
+} from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { setCookie } from '../../utils/cookie';
@@ -77,12 +84,25 @@ export const logoutUser = createAsyncThunk(
     try {
       await logoutApi();
       localStorage.removeItem('refreshToken');
-      document.cookie = 'accessToken=; Max-Age=0';
+      setCookie('accessToken', '');
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка при выходе');
     }
   }
 );
+
+export const updateUserThunk = createAsyncThunk<
+  TUser, // return
+  Partial<TRegisterData>, // payload
+  { rejectValue: string }
+>('user/updateUser', async (userData, thunkAPI) => {
+  try {
+    const response = await updateUserApi(userData);
+    return response.user;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue('Ошибка при обновлении данных');
+  }
+});
 
 export const userSlice = createSlice({
   name: 'user',
@@ -93,9 +113,6 @@ export const userSlice = createSlice({
     },
     logout(state) {
       state.user = null;
-    },
-    getUser(state, action) {
-      state.user = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -120,6 +137,14 @@ export const userSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+      })
+      .addCase(updateUserThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updateUserThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? 'Ошибка';
       });
   }
 });

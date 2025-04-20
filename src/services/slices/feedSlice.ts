@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getFeedsApi } from '@api';
+import { getFeedsApi, getOrderByNumberApi } from '@api';
 import { TOrder } from '@utils-types';
 
 type FeedState = {
@@ -8,6 +8,7 @@ type FeedState = {
   totalToday: number;
   isLoading: boolean;
   error: string | null;
+  currentOrder: TOrder | null;
 };
 
 const initialState: FeedState = {
@@ -15,10 +16,11 @@ const initialState: FeedState = {
   total: 0,
   totalToday: 0,
   isLoading: false,
-  error: null
+  error: null,
+  currentOrder: null
 };
 
-export const fetchFeeds = createAsyncThunk(
+export const getFeeds = createAsyncThunk(
   'feed/fetchFeeds',
   async (_, thunkAPI) => {
     try {
@@ -30,23 +32,47 @@ export const fetchFeeds = createAsyncThunk(
   }
 );
 
+export const getFeedsByNumber = createAsyncThunk(
+  'feed/fetchFeedsByNumber',
+  async (number: number, thunkAPI) => {
+    try {
+      console.log('[API] fetchFeedsByNumber сработал');
+      return await getOrderByNumberApi(number);
+    } catch (error) {
+      return thunkAPI.rejectWithValue('Ошибка при загрузке заказа');
+    }
+  }
+);
+
 const feedSlice = createSlice({
   name: 'feed',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFeeds.pending, (state) => {
+      .addCase(getFeeds.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchFeeds.fulfilled, (state, action) => {
+      .addCase(getFeeds.fulfilled, (state, action) => {
         state.orders = action.payload.orders;
         state.total = action.payload.total;
         state.totalToday = action.payload.totalToday;
         state.isLoading = false;
       })
-      .addCase(fetchFeeds.rejected, (state, action) => {
+      .addCase(getFeeds.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getFeedsByNumber.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getFeedsByNumber.fulfilled, (state, action) => {
+        state.currentOrder = action.payload.orders[0];
+        state.isLoading = false;
+      })
+      .addCase(getFeedsByNumber.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

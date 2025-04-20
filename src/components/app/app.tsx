@@ -62,6 +62,7 @@ const RouteComponent: FC = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
 
         <Route
           path='/login'
@@ -111,21 +112,20 @@ const RouteComponent: FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='/feed/:number' element={<OrderInfo />} />
-        <Route
-          path='/ingredients/:id'
-          element={
-            <div style={{ marginTop: '120px' }}>
-              <IngredientDetails />
-            </div>
-          }
-        />
         <Route
           path='/profile/orders/:number'
           element={
             <ProtectedRoute>
               <OrderInfo />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/ingredients/:id'
+          element={
+            <div style={{ marginTop: '120px' }}>
+              <IngredientDetails />
+            </div>
           }
         />
       </Routes>
@@ -136,7 +136,10 @@ const RouteComponent: FC = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Информация о заказе' onClose={() => navigate(-1)}>
+              <Modal
+                title={`#${String(orderNumber).padStart(6, '0')}`}
+                onClose={() => navigate(-1)}
+              >
                 <OrderInfo />
               </Modal>
             }
