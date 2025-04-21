@@ -1,26 +1,36 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from '../../services/store';
-import { userDataSelector } from '../../services/selectors';
+import { Preloader } from '@ui';
 
 type ProtectedRouteProps = {
   children: React.ReactElement;
   onlyUnAuth?: boolean;
 };
 
-export const ProtectedRoute = ({
+export function ProtectedRoute({
   children,
   onlyUnAuth = false
-}: ProtectedRouteProps) => {
-  const user = useSelector(userDataSelector);
+}: ProtectedRouteProps) {
+  const isLoggedIn = useSelector((store) => store.user.user);
+  const isLoading = useSelector((store) => store.user.isLoading);
   const location = useLocation();
+  const from = location.state?.from || '/';
 
-  if (!user && !onlyUnAuth) {
+  // Если загрузка пользователя еще не завершена показать предлоадер
+  if (!isLoading) return <Preloader />;
+
+  // Если разрешен неавторизованный доступ, а пользователь авторизован...
+  if (onlyUnAuth && isLoggedIn) {
+    // ...то отправляем его на предыдущую страницу
+    return <Navigate to={from} replace />;
+  }
+
+  // Если требуется авторизация, а пользователь не авторизован...
+  if (!onlyUnAuth && !isLoggedIn) {
+    // ...то отправляем его на страницу логин
     return <Navigate to='/login' state={{ from: location }} replace />;
   }
 
-  if (user && onlyUnAuth) {
-    return <Navigate to='/' replace />;
-  }
-
+  // Если все ок, то рендерим внутреннее содержимое
   return children;
-};
+}
