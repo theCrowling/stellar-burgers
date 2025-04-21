@@ -154,7 +154,10 @@ const RouteComponent: FC = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Информация о заказе' onClose={() => navigate(-1)}>
+              <Modal
+                title={`#${String(orderNumber).padStart(6, '0')}`}
+                onClose={() => navigate(-1)}
+              >
                 <OrderInfo />
               </Modal>
             }
