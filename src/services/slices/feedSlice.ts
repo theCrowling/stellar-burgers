@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getFeedsApi, getOrderByNumberApi } from '@api';
 import { TOrder } from '@utils-types';
 
-type FeedState = {
+export type FeedState = {
   orders: TOrder[];
   total: number;
   totalToday: number;
