@@ -37,7 +37,7 @@
 ```bash
 # клонировать репозиторий
 git clone https://github.com/theCrowling/stellar-burgers.git
-cd stellar-burger
+cd stellar-burgers
 
 # установить зависимости
 npm install
