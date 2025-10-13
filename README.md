@@ -19,7 +19,6 @@
 - Jest + Cypress (тесты)  
 
 ## Демонстрация
-- Ссылка на демо: `https://example`  
 - Ссылка на репозиторий: `https://github.com/theCroliwng/stellar-burger`
 
 ## Скриншоты
